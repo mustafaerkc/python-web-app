@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Web Uygulaması</title>
+    <style>
+        body {
+            background-color: lightblue;
+        }
+        .button {
+            background-color: #1E90FF; /* Daha koyu bir mavi */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        #result {
+            color: red; /* Kırmızı yazı */
+        }
+    </style>
+</head>
+<body>
+    <h1>Flask ile basit bir web uygulaması.</h1>
+    <button class="button" onclick="test()">Test Et</button>
+    <p id="result"></p>
+
+    <script>
+        function test() {
+            document.getElementById("result").innerHTML = "Test başarılı!";
+        }
+    </script>
+</body>
+</html>
