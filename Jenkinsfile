@@ -12,7 +12,7 @@ pipeline {
           serviceAccountName: jenkins-agents
           containers:
          - name: docker
-            image: myreg/docker:1
+            image: mustafaerkoc/jenkins-agent:1.4
             volumeMounts:
             - name: build-cache
               mountPath: /var/lib/docker
