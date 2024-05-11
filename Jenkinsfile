@@ -2,26 +2,26 @@ pipeline {
     agent {
         kubernetes {
             yaml '''
-        apiVersion: v1
-        kind: Pod
-        spec:
-          volumes:
-            - name: build-cache
-              persistentVolumeClaim: 
-                claimName: build-cache
-          serviceAccountName: jenkins-agents
-          containers:
-         - name: docker
-            image: mustafaerkoc/jenkins-agent:1.4
-            volumeMounts:
-            - name: build-cache
-              mountPath: /var/lib/docker
-              subPath: docker
-            command:
-            - cat
-            tty: true
-            securityContext:
-              privileged: true
+apiVersion: v1
+kind: Pod
+spec:
+  volumes:
+    - name: build-cache
+      persistentVolumeClaim:
+        claimName: build-cache
+  serviceAccountName: jenkins-agents
+  containers:
+    - name: docker
+      image: mustafaerkoc/jenkins-agent:1.4
+      volumeMounts:
+        - name: build-cache
+          mountPath: /var/lib/docker
+          subPath: docker
+      command:
+        - cat
+      tty: true
+      securityContext:
+        privileged: true
        '''
         }
     }
