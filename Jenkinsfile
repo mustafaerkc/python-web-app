@@ -22,22 +22,20 @@ spec:
       tty: true
       securityContext:
         privileged: true
-       '''
+'''
         }
     }
     stages {
-
-        // checkout and test
-
         stage('Build UI Docker Image') {
             steps {
                 container('docker') {
-                      sh 'dockerd & > /dev/null'
-                      sleep(time: 10, unit: "SECONDS")
-                      sh "docker build  -t myreg/myapp/ui:$BUILD_NUMBER ."
-                      sh "docker push myreg/myapp/ui:$BUILD_NUMBER"
+                    sh 'dockerd & > /dev/null'
+                    sleep(time: 10, unit: "SECONDS")
+                    sh "docker build -t myreg/myapp/ui:$BUILD_NUMBER ."
+                    sh "docker push myreg/myapp/ui:$BUILD_NUMBER"
                 }
             }
         }
     }
 }
+
