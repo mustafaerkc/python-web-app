@@ -29,7 +29,7 @@ spec:
   volumes:
     - name: docker-config
       secret:
-        secretName: docker-config
+        secretName: regcred
             """
         }
     }
