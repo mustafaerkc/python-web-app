@@ -29,7 +29,7 @@ spec:
   volumes:
     - name: docker-config
       secret:
-        secretName: regcred
+        secretName: docker-config
             """
         }
     }
@@ -46,7 +46,7 @@ spec:
                     script {
                         def context = "."
                         def dockerfile = "Dockerfile"
-                        def image = "mustafaerkoc/test:latest"
+                        def image = "mustafaerkoc/python-app:latest"
 
                         sh "/kaniko/executor --context ${context} --dockerfile ${dockerfile} --destination ${image}"
                     }
