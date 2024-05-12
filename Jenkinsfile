@@ -5,7 +5,7 @@ pipeline {
             steps {
                 script {
                     // GitHub reposundan kodu çek
-                    git credentialsId: 'tokeeen', url: 'https://github.com/mustafaerkc/python-web-app.git'
+                    git credentialsId: 'github-token', url: 'https://github.com/mustafaerkc/python-web-app.git'
                 }
             }
         }
@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     // Docker imajını DockerHub'a gönder
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-creds') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-token') {
                         docker.image('mustafaerkoc/python-app').push('latest')
                         docker.image('mustafaerkoc/python-app').push("${env.BUILD_NUMBER}")
                     }
