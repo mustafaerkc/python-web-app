@@ -23,13 +23,6 @@ spec:
       command:
         - /busybox/cat
       tty: true
-      resources:
-        requests:
-          memory: "1024Mi"
-          cpu: "1000m"
-        limits:
-          memory: "4096Mi"
-          cpu: "4000m"
       volumeMounts:
         - name: docker-config
           mountPath: /kaniko/.docker/
