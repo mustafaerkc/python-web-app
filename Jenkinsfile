@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKERHUB_USERNAME = "zerohertzkr"
-        IMAGE_NAME = "test"
-    }
-
     stages {
         stage("Build Docker Image & Push to Docker Hub") {
             steps {
