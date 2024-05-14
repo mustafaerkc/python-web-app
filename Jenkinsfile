@@ -9,7 +9,6 @@ pipeline {
                         def context = "."
                         def dockerfile = "Dockerfile"
                         def image = "mustafaerkoc/python-app:1.0"
-                        sh "cat /kaniko/.docker/config.json"
                         sh "/kaniko/executor --context ${context} --dockerfile ${dockerfile} --destination ${image}"
                     }
                 }
