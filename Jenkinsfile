@@ -8,7 +8,7 @@ pipeline {
                     script {
                         def context = "."
                         def dockerfile = "Dockerfile"
-                        def image = "mustafaerkoc/python-app:latest"
+                        def image = "mustafaerkoc/python-app:1.0"
 
                         sh "/kaniko/executor --context ${context} --dockerfile ${dockerfile} --destination ${image}"
                     }
