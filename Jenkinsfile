@@ -56,6 +56,7 @@ pipeline {
         stage('Helm Push') {
             steps {
                 container('helm') {
+                        sh 'echo "@${FULL_CHART_NAME}"'
 			sh 'curl --data-binary "@${FULL_CHART_NAME}" http://helm-repo-chartmuseum.default.svc.cluster.local:8080/api/charts'
                     
                 }
