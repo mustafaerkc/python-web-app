@@ -28,7 +28,7 @@ environment {
         stage('Modify Chart Version') {
             steps {
                 script {
-                    sh "sed -i 'sed -i '' "s|version: .*|version: \"${VERSION}\"|" python-app/Chart.yaml"
+                   sh "sed -i '' 's|^version: .*|^version: \"${VERSION}\"|' python-app/Chart.yaml"
                 }
             }
         }
