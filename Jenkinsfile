@@ -28,8 +28,13 @@ environment {
             steps {
                 container('helm') {
                     sh 'helm version'
+                }
+            }
+        }
+        stage('Scan Docker İmage') {
+            steps {
+                container('docker') {
                     sh 'docker ps'
-                    // Helm komutlarını burada çalıştırabilirsiniz
                 }
             }
         }
