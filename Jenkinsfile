@@ -12,7 +12,7 @@ pipeline {
         NEXUS_REPOSITORY_NAME = 'evam-charts'
         CHART_NAME = 'evam/python-app'
         VERSION = "1.0.${env.BUILD_ID}"
-	FULL_CHART_NAME = "${env.python-app}-${env.VERSION}.tgz"
+	FULL_CHART_NAME = "${APP_NAME}-${VERSION}.tgz"
     }
 
     stages {
