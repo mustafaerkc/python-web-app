@@ -2,14 +2,17 @@ pipeline {
     agent any
 
     environment {
+        APP_NAME = "python-app"
         REPOSITORY = "https://github.com/mustafaerkc/python-web-app.git"
         EKS_CLUSTER_NAME = "test"
         ARGOCD_NAMESPACE = "argocd"
         ARGOCD_SERVER = "argocd.argocd.svc.local.cluster"
+        NEXUS_ARTIFACT_ID= "python-app"
         NEXUS_URL = "https://repository.evam.dev"
         NEXUS_REPOSITORY_NAME = 'evam-charts'
         CHART_NAME = 'evam/python-app'
         VERSION = "1.0.${env.BUILD_ID}"
+	FULL_CHART_NAME = "${env.python-app}-${env.VERSION}.tgz"
     }
 
     stages {
@@ -42,12 +45,19 @@ pipeline {
             }
         }
 
-        stage('Deploy with Helm') {
+        stage('Package with Helm') {
             steps {
                 container('helm') {
-                    withCredentials([usernamePassword(credentialsId: 'nexus-repository', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh "helm package python-app/."
-                    }
+                    
+                }
+            }
+        }
+        stage('Helm Push') {
+            steps {
+                container('helm') {
+			sh "curl --data-binary "@${FULL_CHART_NAME}" http://helm-repo-chartmuseum.default.svc.cluster.local:8080/api/charts"
+                    
                 }
             }
         }
