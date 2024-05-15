@@ -9,6 +9,7 @@ environment {
     NEXUS_URL ="https://repository.evam.dev"
     NEXUS_REPOSITORY_NAME = 'evam-charts'
     CHART_NAME = 'evam/python-app'
+    VERSION = "1.0.${env.BUILD_ID}
     
 }
     stages {
