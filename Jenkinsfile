@@ -33,7 +33,7 @@ pipeline {
    cat python-app/Chart.yaml | grep version
    
    # Update version using sed
-   sed -i 's|^version: .*|^version: "${VERSION}"|' python-app/Chart.yaml
+   sed -i 's|version: .*|version: "${VERSION}"|' python-app/Chart.yaml
    
    # Print updated version
    cat python-app/Chart.yaml | grep version
