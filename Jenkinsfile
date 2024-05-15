@@ -1,6 +1,16 @@
 pipeline {
     agent any
 
+environment {
+    REPOSITORY =
+    EKS_CLUSTER_NAME =
+    ARGOCD_NAMESPACE = 
+    ARGOCD_SERVER = 
+    NEXUS_URL ="https://repository.evam.dev"
+    NEXUS_REPOSITORY_NAME = 'evam-charts'
+    CHART_NAME = 'evam/python-app'
+    
+}
     stages {
         stage("Build Docker Image & Push to Docker Hub") {
             steps {
@@ -22,6 +32,14 @@ pipeline {
                 }
             }
         }
+        stage('Scan') {
+      steps {
+	  
+        sh "curl -sOL https://github.com/aquasecurity/trivy/releases/download/v0.24.2/trivy_0.24.2_Linux-64bit.tar.gz"
+        sh "tar -xvf trivy_0.24.2_Linux-64bit.tar.gz"
+        sh './trivy image --no-progress --exit-code 1 --severity CRITICAL mustafaerkoc/python-app:1.0'
+      }
+    }
     }
 
     post {
