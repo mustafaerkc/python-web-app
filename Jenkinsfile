@@ -24,6 +24,14 @@ environment {
                 }
             }
         }
+    stages {
+        stage('Modify Chart Version') {
+            steps {
+                script {
+                    sh "sed -i 's/appVersion: \"1.16.0\"/appVersion: \"${VERSION}\"/' python-app/Chart.yaml"
+                }
+            }
+        }
         stage('Deploy with Helm') {
             steps {
                 container('helm') {
