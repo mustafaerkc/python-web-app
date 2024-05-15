@@ -2,10 +2,10 @@ pipeline {
     agent any
 
 environment {
-    REPOSITORY =
-    EKS_CLUSTER_NAME =
-    ARGOCD_NAMESPACE = 
-    ARGOCD_SERVER = 
+    REPOSITORY = "https://github.com/mustafaerkc/python-web-app.git"
+    EKS_CLUSTER_NAME = "test"
+    ARGOCD_NAMESPACE = "argocd"
+    ARGOCD_SERVER = argocd.argocd.svc.local.cluster
     NEXUS_URL ="https://repository.evam.dev"
     NEXUS_REPOSITORY_NAME = 'evam-charts'
     CHART_NAME = 'evam/python-app'
