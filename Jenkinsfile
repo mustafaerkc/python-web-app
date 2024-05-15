@@ -1,17 +1,17 @@
 pipeline {
     agent any
 
-environment {
-    REPOSITORY = "https://github.com/mustafaerkc/python-web-app.git"
-    EKS_CLUSTER_NAME = "test"
-    ARGOCD_NAMESPACE = "argocd"
-    ARGOCD_SERVER = "argocd.argocd.svc.local.cluster"
-    NEXUS_URL ="https://repository.evam.dev"
-    NEXUS_REPOSITORY_NAME = 'evam-charts'
-    CHART_NAME = 'evam/python-app'
-    VERSION = "1.0.${env.BUILD_ID}"
-    
-}
+    environment {
+        REPOSITORY = "https://github.com/mustafaerkc/python-web-app.git"
+        EKS_CLUSTER_NAME = "test"
+        ARGOCD_NAMESPACE = "argocd"
+        ARGOCD_SERVER = "argocd.argocd.svc.local.cluster"
+        NEXUS_URL = "https://repository.evam.dev"
+        NEXUS_REPOSITORY_NAME = 'evam-charts'
+        CHART_NAME = 'evam/python-app'
+        VERSION = "1.0.${env.BUILD_ID}"
+    }
+
     stages {
         stage("Build Docker Image & Push to Docker Hub") {
             steps {
@@ -24,31 +24,32 @@ environment {
                 }
             }
         }
-    stages {
+
         stage('Modify Chart Version') {
             steps {
                 script {
-                   sh "sed -i '' 's|^version: .*|^version: \"${VERSION}\"|' python-app/Chart.yaml"
+                    sh "sed -i '' 's|^version: .*|^version: \"${VERSION}\"|' python-app/Chart.yaml"
                 }
             }
         }
+
         stage('Deploy with Helm') {
             steps {
                 container('helm') {
-                   withCredentials([usernamePassword(credentialsId: 'nexus-repository', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                      sh "helm package python-app/."
-               }
+                    withCredentials([usernamePassword(credentialsId: 'nexus-repository', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                        sh "helm package python-app/."
+                    }
+                }
             }
         }
-    }
+
         stage('Scan') {
-      steps {
-	  
-        sh "curl -sOL https://github.com/aquasecurity/trivy/releases/download/v0.24.2/trivy_0.24.2_Linux-64bit.tar.gz"
-        sh "tar -xvf trivy_0.24.2_Linux-64bit.tar.gz"
-        sh './trivy image --no-progress  --severity CRITICAL mustafaerkoc/python-app:1.0'
-      }
-    }
+            steps {
+                sh "curl -sOL https://github.com/aquasecurity/trivy/releases/download/v0.24.2/trivy_0.24.2_Linux-64bit.tar.gz"
+                sh "tar -xvf trivy_0.24.2_Linux-64bit.tar.gz"
+                sh './trivy image --no-progress --severity CRITICAL mustafaerkoc/python-app:1.0'
+            }
+        }
     }
 
     post {
