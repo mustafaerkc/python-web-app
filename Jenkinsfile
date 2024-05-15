@@ -9,7 +9,7 @@ environment {
     NEXUS_URL ="https://repository.evam.dev"
     NEXUS_REPOSITORY_NAME = 'evam-charts'
     CHART_NAME = 'evam/python-app'
-    VERSION = "1.0.${env.BUILD_ID}
+    VERSION = "1.0.${env.BUILD_ID}"
     
 }
     stages {
@@ -20,7 +20,7 @@ environment {
                         def context = "."
                         def dockerfile = "Dockerfile"
                         def image = "mustafaerkoc/python-app:1.0"
-                        sh "/kaniko/executor --context ${context} --dockerfile ${dockerfile} --destination ${image}"
+                        #sh "/kaniko/executor --context ${context} --dockerfile ${dockerfile} --destination ${image}"
                     }
                 }
             }
@@ -28,10 +28,12 @@ environment {
         stage('Deploy with Helm') {
             steps {
                 container('helm') {
-                    sh 'helm version'
-                }
+                   withCredentials([usernamePassword(credentialsId: 'nexus-repository', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                      sh "helm package ."
+               }
             }
         }
+    }
         stage('Scan') {
       steps {
 	  
