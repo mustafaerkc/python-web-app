@@ -28,7 +28,16 @@ pipeline {
         stage('Modify Chart Version') {
             steps {
                 script {
-		  sh 'sed -i "s|^version: .*|version: \"1.0.${env.BUILD_ID}\"|" python-app/Chart.yaml'
+			sh """#!/bin/bash
+   # Print current version
+   cat python-app/Chart.yaml | grep version
+   
+   # Update version using sed
+   sed -i 's|^version: .*|^version: "${VERSION}"|' python-app/Chart.yaml
+   
+   # Print updated version
+   cat python-app/Chart.yaml | grep version
+   """
                 }
             }
         }
