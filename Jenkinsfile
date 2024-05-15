@@ -31,13 +31,6 @@ environment {
                 }
             }
         }
-        stage('Scan Docker İmage') {
-            steps {
-                container('docker') {
-                    sh 'docker ps'
-                }
-            }
-        }
         stage('Scan') {
       steps {
 	  
