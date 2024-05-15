@@ -14,6 +14,12 @@ pipeline {
                 }
             }
         }
+        stage('Deploy with Helm') {
+            steps {
+                container('helm') {
+                    sh 'helm version'
+                    // Helm komutlarını burada çalıştırabilirsiniz
+                }
     }
 
     post {
@@ -22,4 +28,3 @@ pipeline {
         }
     }
 }
-
