@@ -28,6 +28,7 @@ environment {
             steps {
                 container('helm') {
                     sh 'helm version'
+                    sh 'docker ps'
                     // Helm komutlarını burada çalıştırabilirsiniz
                 }
             }
