@@ -28,7 +28,7 @@ environment {
             steps {
                 container('helm') {
                    withCredentials([usernamePassword(credentialsId: 'nexus-repository', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                      sh "helm package ."
+                      sh "helm package python-app/."
                }
             }
         }
