@@ -16,22 +16,20 @@ pipeline {
     }
 
     stages {
-        stage('Modify Chart Version') {
+stage('SonarQube Code Analysis') {
             steps {
+                dir("${WORKSPACE}"){
+                // Run SonarQube analysis for Python
                 script {
-                    sh """#!/bin/bash
-                    # Print current version
-                    cat python-app/Chart.yaml | grep version
-
-                    # Update version using sed
-                    sed -i 's|version: .*|version: "${VERSION}"|' python-app/Chart.yaml
-
-                    # Print updated version
-                    cat python-app/Chart.yaml | grep version
-                    """
+                    def scannerHome = tool name: 'scanner-name', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                    withSonarQubeEnv('sonar') {
+                        sh "echo $pwd"
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
                 }
             }
-        }
+            }
+       }
     }
 
     post {
