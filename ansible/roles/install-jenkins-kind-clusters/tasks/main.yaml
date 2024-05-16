@@ -1,0 +1,21 @@
+- name: Get defaults
+  include_vars:
+    file: "{{ playbook_dir }}/config/defaults.yml"
+- set_fact:
+    argocd_release_type: "linux"
+- name: Create a k8s namespace
+  kubernetes.core.k8s:
+    name: jenkins
+    api_version: v1
+    kind: Namespace
+    state: present
+- name: Add argo helm repo
+  kubernetes.core.helm_repository:
+      name: jenkins
+      repo_url: https://charts.jenkins.io
+- name: Install Jenkins Chart
+  kubernetes.core.helm:
+      name: jenkins
+      namespace: jenkins
+      create_namespace: true
+      chart_ref: jenkinsci/jenkins

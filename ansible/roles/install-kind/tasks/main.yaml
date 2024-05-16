@@ -1,0 +1,38 @@
+---
+- set_fact:
+    kind_release_type: "linux"
+
+- name: Setting ark facts for MacOS
+  set_fact:
+    istio_release_type: "osx"
+  when: ansible_os_family == "Darwin"
+
+- name: Setting Kind Version
+  set_fact:
+    istio_version: "v0.23.0"
+
+- set_fact:
+    kind_download_url: "https://kind.sigs.k8s.io/dl/{{ kind_version  }}/kind-linux-amd64"
+  when: ansible_os_family == "linux"
+
+
+
+- name:  Install Kind
+  command: '[ $(uname -m) = x86_64 ] && curl -Lo ./kind "{{ kind_download_url  }}" '
+  register: sh_info
+
+- name:  Executuble Kind
+  command: 'chmod +x ./kind | sudo mv ./kind /usr/local/bin/kind '
+  register: sh_info
+
+
+- debug:
+      msg: "{{sh_info.stdout_lines}}"
+
+- name: Verify Kind Installation
+  command: "kind version"
+  changed_when: false
+  register: kind_version_output
+
+- debug:
+    var: kind_version_output.stdout

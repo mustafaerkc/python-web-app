@@ -1,0 +1,35 @@
+---
+- name: Get defaults
+  include_vars:
+    file: "{{ playbook_dir }}/config/defaults.yml"
+- set_fact:
+    argocd_release_type: "linux"
+- name: Create a k8s namespace
+  kubernetes.core.k8s:
+    name: argocd
+    api_version: v1
+    kind: Namespace
+    state: present
+- name: add label to existing namespace
+  kubernetes.core.k8s:
+    state: patched
+    kind: Namespace
+    name: argocd
+    definition:
+      metadata:
+        labels:
+          istio-injection: enabled
+- name: Add argo helm repo
+  kubernetes.core.helm_repository:
+      name: argo
+      repo_url: https://argoproj.github.io/argo-helm
+- name: Install Argocd Chart
+  kubernetes.core.helm:
+      name: argocd
+      namespace: argocd
+      create_namespace: true
+      chart_ref: argo/argo-cd
+      values:
+        server:
+          extraArgs:
+            - --insecure
