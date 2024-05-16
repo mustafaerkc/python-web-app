@@ -22,7 +22,7 @@ pipeline {
                     script {
                         def context = "."
                         def dockerfile = "Dockerfile"
-                        def image = "mustafaerkoc/python-app:1.0"
+                        def image = "mustafaerkoc/python-app:${VERSION}"
 			sh "/kaniko/executor --context ${context} --dockerfile ${dockerfile} --destination ${image}"
                     }
                 }
@@ -36,7 +36,22 @@ pipeline {
                 sh "./trivy image --no-progress --severity CRITICAL mustafaerkoc/python-app:1.0"
             }
         }
+        stage('Modify İmage Version') {
+            steps {
+                script {
+                    sh """#!/bin/bash
+                       # Print current version
+                       cat python-app/values.yaml | grep version
 
+                       # Update version using sed
+                       sed -i 's|tag: .*|tag: "${VERSION}"|' python-app/values.yaml
+
+                       # Print updated version
+                       cat python-app/values.yaml | grep version
+                    """
+                }
+            }
+        }
         stage('Modify Chart Version') {
             steps {
                 script {
