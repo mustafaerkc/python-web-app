@@ -36,13 +36,11 @@ pipeline {
                 sh "./trivy image --no-progress --severity CRITICAL mustafaerkoc/python-app:${VERSION}"
             }
         }
+
         stage('Modify İmage Version') {
             steps {
-                script {
-                    sh "wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
-    chmod +x /usr/bin/yq"
+                container('yq') {
                     sh "yq -i '.image.tag = "${VERSION}"' python-app/values.yaml"
-
                 }
             }
         }
