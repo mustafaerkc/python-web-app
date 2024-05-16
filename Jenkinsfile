@@ -40,7 +40,7 @@ pipeline {
         stage('Modify İmage Version') {
             steps {
                 container('yq') {
-                    sh "yq -i '.image.tag = "${VERSION}"' python-app/values.yaml"
+                    sh 'yq -i '.image.tag = "${VERSION}"' python-app/values.yaml'
                 }
             }
         }
