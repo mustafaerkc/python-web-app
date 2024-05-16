@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: evam-app
+  name: python-app
 spec:
   destination:
     name: ''
