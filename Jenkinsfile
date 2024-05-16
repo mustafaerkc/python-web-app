@@ -16,22 +16,69 @@ pipeline {
     }
 
     stages {
-
-    }
-stage('SonarQube Code Analysis') {
+        stage("Build Docker Image & Push to Docker Hub") {
             steps {
-                dir("${WORKSPACE}"){
-                // Run SonarQube analysis for Python
-                script {
-                    def scannerHome = tool name: 'scanner-name', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                    withSonarQubeEnv('sonar') {
-                        sh "echo $pwd"
-                        sh "${scannerHome}/bin/sonar-scanner"
+                container("kaniko") {
+                    script {
+                        def context = "."
+                        def dockerfile = "Dockerfile"
+                        def image = "mustafaerkoc/python-app:${VERSION}"
+			sh "/kaniko/executor --context ${context} --dockerfile ${dockerfile} --destination ${image}"
                     }
                 }
             }
+        }
+
+        stage('Scan') {
+            steps {
+                sh "curl -sOL https://github.com/aquasecurity/trivy/releases/download/v0.24.2/trivy_0.24.2_Linux-64bit.tar.gz"
+                sh "tar -xvf trivy_0.24.2_Linux-64bit.tar.gz"
+                sh "./trivy image --no-progress --severity CRITICAL mustafaerkoc/python-app:${VERSION}"
             }
-       }
+        }
+
+        stage('Modify İmage Version') {
+            steps {
+                container('yq') {
+                    sh 'yq e -i ".image.tag = env(VERSION)" python-app/values.yaml'
+                }
+            }
+        }
+        stage('Modify Chart Version') {
+            steps {
+                script {
+                    sh """#!/bin/bash
+                       # Print current version
+                       cat python-app/Chart.yaml | grep version
+
+                       # Update version using sed
+                       sed -i 's|version: .*|version: "${VERSION}"|' python-app/Chart.yaml
+
+                       # Print updated version
+                       cat python-app/Chart.yaml | grep version
+                    """
+                }
+            }
+        }
+
+        stage('Package with Helm') {
+            steps {
+                container('helm') {
+                    sh "helm package python-app/."
+                }
+            }
+        }
+
+        stage('Helm Push') {
+            steps {
+                container('helm') {
+                    sh "echo \"@${FULL_CHART_NAME}\""
+                    sh "curl --data-binary \"@${FULL_CHART_NAME}\" http://helm-repo-chartmuseum.default.svc.cluster.local:8080/api/charts"
+                }
+            }
+        }
+
+    }
 
     post {
         always {
