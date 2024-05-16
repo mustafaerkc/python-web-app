@@ -39,16 +39,10 @@ pipeline {
         stage('Modify İmage Version') {
             steps {
                 script {
-                    sh """#!/bin/bash
-                       # Print current version
-                       cat python-app/values.yaml | grep version
+                    sh "wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
+    chmod +x /usr/bin/yq"
+                    sh "yq -i '.image.tag = "${VERSION}"' python-app/values.yaml"
 
-                       # Update version using sed
-                       #sed -i 's|tag: .*|tag: "${VERSION}"|' python-app/values.yaml
-
-                       # Print updated version
-                       cat python-app/values.yaml | grep version
-                    """
                 }
             }
         }
