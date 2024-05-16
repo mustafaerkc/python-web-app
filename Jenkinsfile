@@ -33,7 +33,7 @@ pipeline {
             steps {
                 sh "curl -sOL https://github.com/aquasecurity/trivy/releases/download/v0.24.2/trivy_0.24.2_Linux-64bit.tar.gz"
                 sh "tar -xvf trivy_0.24.2_Linux-64bit.tar.gz"
-                sh "./trivy image --no-progress --severity CRITICAL mustafaerkoc/python-app:1.0"
+                sh "./trivy image --no-progress --severity CRITICAL mustafaerkoc/python-app:${VERSION}"
             }
         }
         stage('Modify İmage Version') {
@@ -44,7 +44,7 @@ pipeline {
                        cat python-app/values.yaml | grep version
 
                        # Update version using sed
-                       sed -i 's|tag: .*|tag: "${VERSION}"|' python-app/values.yaml
+                       #sed -i 's|tag: .*|tag: "${VERSION}"|' python-app/values.yaml
 
                        # Print updated version
                        cat python-app/values.yaml | grep version
