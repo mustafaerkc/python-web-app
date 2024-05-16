@@ -210,7 +210,8 @@ stringData:
 Python App : localhost
 Jenkins: localhost:30001
 Argocd: localhost:30003 
-Grafana: localhost: 30006
+Grafana: localhost:30006
+SonarQube: localhost:30008
 ```
 
 
