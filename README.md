@@ -91,6 +91,7 @@ kubectl create secret generic kaniko-secret — from-file=config.json — namesp
 
 Finally, we need to create the volume from the template in Jenkins Cloud.
 ![](https://miro.medium.com/v2/resize:fit:720/format:webp/1*XruW-hf-lyyozD9m34_9BA.png)
+[]()
 The pipeline should be as follows.
 []()
  ```
